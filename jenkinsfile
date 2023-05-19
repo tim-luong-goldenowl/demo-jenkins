@@ -2,14 +2,14 @@ pipeline {
     agent {
         docker {
             image 'node:lts-bullseye-slim'
-            args '-u 0:0'
+            args '-u 0:0 -v /tmp:/root/.cache'
         }
     }
 
     stages {
         stage('Build') {
             steps {
-                sh 'docker -v'
+                sh 'npm install'
             }
         }
     }
