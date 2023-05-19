@@ -1,0 +1,23 @@
+{
+  "name": "demo-jenkins",
+  "version": "1.0.0",
+  "description": "This is Readme aa",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-luong-goldenowl/demo-jenkins.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tim-luong-goldenowl/demo-jenkins/issues"
+  },
+  "homepage": "https://github.com/tim-luong-goldenowl/demo-jenkins#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jest": "^29.5.0"
+  }
+}
