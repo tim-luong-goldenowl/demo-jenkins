@@ -23,6 +23,7 @@ pipeline {
         stage('terraform') {
             agent any
             steps {
+                sh 'sudo chmod -R 777 ./terraform/terraform_installation.sh'
                 sh './terraform/terraform_installation.sh apply -auto-approve'
             }
         }
