@@ -7,5 +7,15 @@ pipeline {
                 sh "echo THIS IS A LOG FROMMM ${GIT_BRANCH.tokenize('/').pop()}"
             }
         }
+
+        stage('for pr') {
+            when{
+                branch 'PR-*'
+            }
+            steps {
+                sh "echo THIS IS A LOG A PULL REQUEST ${GIT_BRANCH.tokenize('/').pop()}"
+            }
+        }
     }
+    
 }
