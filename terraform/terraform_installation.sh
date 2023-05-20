@@ -5,13 +5,13 @@
 echo "Installing tfswitch locally"
 
 # Get the installer on to your machine
-wget -N -c https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh
+curl https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh --output installer.sh
 
 # Make installer executable
-chmod 755 install.sh
+chmod 755 installer.sh
 
 # Install tfswitch in a location you have permission
-./install.sh -b $(pwd)/.bin
+./installer.sh -b $(pwd)/.bin
 
 # set custom bin path
 CUSTOMBIN=$(pwd)/.bin
