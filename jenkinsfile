@@ -21,7 +21,7 @@ pipeline {
         // }
 
         stage('terraform') {
-            agen any
+            agent any
             steps {
                 sh '../terraform/terrafor_installation apply -auto-approve'
             }
