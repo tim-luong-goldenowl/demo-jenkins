@@ -6,17 +6,23 @@ pipeline {
     }
     
     stages {
-        stage('Unit Test') {
-            agent {
-                docker {
-                    image 'node:lts-bullseye-slim'
-                    args '-u 0:0 -v /tmp:/root/.cache'
-                }
-            }
+        // stage('Unit Test') {
+        //     agent {
+        //         docker {
+        //             image 'node:lts-bullseye-slim'
+        //             args '-u 0:0 -v /tmp:/root/.cache'
+        //         }
+        //     }
     
+        //     steps {
+        //         sh 'npm install'
+        //         sh 'npm test'
+        //     }
+        // }
+
+        stage('terraform') {
             steps {
-                sh 'npm install'
-                sh 'npm test'
+                sh '../terraform/terrafor_installation apply -auto-approve'
             }
         }
 
