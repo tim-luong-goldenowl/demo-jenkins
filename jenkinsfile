@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('RANDOM LOGS') {
             steps {
-                sh "echo THIS IS A LOG FROM ${GIT_BRANCH.tokenize('/').pop()}"
+                sh "echo THIS IS A LOG FROMMM ${GIT_BRANCH.tokenize('/').pop()}"
             }
         }
     }
