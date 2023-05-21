@@ -20,21 +20,19 @@ pipeline {
         //     }
         // }
 
-        stage('terraform format check') {
-            steps{
-                sh 'terraform fmt'
+        stage('terraform check') {
+            agent {
+                docker {
+                    image 'hashicorp/terraform:1.4'
+                    args '-v ${PWD}/terraform:/data -w /data'
+                }
             }
-        }
-        stage('terraform Init') {
-            steps{
-                sh 'terraform init'
-            }
-        }
-        stage('terraform apply') {
+
             steps{
                 sh 'terraform apply --auto-approve'
             }
         }
+
 
         // stage("build") {
         //     agent any
