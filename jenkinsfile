@@ -20,16 +20,32 @@ pipeline {
         //     }
         // }
 
-        stage('terraform check') {
+        stage('terraform deploy') {
            agent {
                 docker {
                     image 'hashicorp/terraform:1.4'
-                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node:/workpace -w /workpace'
+                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace'
                 }
             }
 
-            steps{
-                 sh 'terraform version'
+            stages {
+                stage('terraform init') {
+                    steps{
+                        sh 'terraform init'
+                    }
+                }
+
+                stage('terraform plan') {
+                    steps{
+                        sh 'terraform plan'
+                    }
+                }
+
+                stage('terraform apply') {
+                    steps{
+                        sh 'terraform apply'
+                    }
+                }
             }
         }
 
