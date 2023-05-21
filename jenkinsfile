@@ -30,7 +30,7 @@ pipeline {
             agent any
 
             steps{
-                sh ('terraform init')
+                sh 'docker run -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node:/workpace -w /workpace hashicorp/terraform:1.4 plan'
             }
         }
 
