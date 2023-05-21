@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "thailuong/sample-node"
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
     
     stages {
@@ -23,11 +25,8 @@ pipeline {
         stage('terraform deploy') {
            agent {
                 docker {
-                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        image 'hashicorp/terraform:1.4'
-                        args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY'
-                    }
-                    
+                    image 'hashicorp/terraform:1.4'
+                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
                 }
             }
 
