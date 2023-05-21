@@ -6,32 +6,32 @@ pipeline {
     }
     
     stages {
-        // stage('Unit Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:lts-bullseye-slim'
-        //             args '-u 0:0 -v /tmp:/root/.cache'
-        //         }
-        //     }
-    
-        //     steps {
-        //         sh 'npm install'
-        //         sh 'npm test'
-        //     }
-        // }
-
-        stage('terraform check') {
+        stage('Unit Test') {
             agent {
                 docker {
-                    image 'hashicorp/terraform:1.4'
-                    args '-u 0:0 -v ${PWD}/terraform:/data -w /data'
+                    image 'node:lts-bullseye-slim'
+                    args '-u 0:0 -v /tmp:/root/.cache'
                 }
             }
-
-            steps{
-                sh 'terraform apply --auto-approve'
+    
+            steps {
+                sh 'npm install'
+                sh 'npm test'
             }
         }
+
+        // stage('terraform check') {
+        //     agent {
+        //         docker {
+        //             image 'hashicorp/terraform:1.4'
+        //             args '-u 0:0 -v ${PWD}/terraform:/data -w /data'
+        //         }
+        //     }
+
+        //     steps{
+        //         sh 'terraform apply --auto-approve'
+        //     }
+        // }
 
 
         // stage("build") {
