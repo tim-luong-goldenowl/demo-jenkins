@@ -6,14 +6,6 @@ pipeline {
     }
     
     stages {
-        stage('Prepare Docker') {
-            agent any
-
-            steps {
-                sh 'chmod 777 /var/run/docker.sock'
-            }
-        }
-
         // stage('Unit Test') {
         //     agent {
         //         docker {
