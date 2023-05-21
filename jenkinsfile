@@ -30,7 +30,7 @@ pipeline {
             agent any
 
             steps{
-                sh 'docker run -v ${pwd}:/workpace -w /workpace hashicorp/terraform:1.4 plan'
+                sh 'docker run -v ${PWD}:/workpace -w /workpace hashicorp/terraform:1.4 plan'
             }
         }
 
