@@ -23,29 +23,32 @@ pipeline {
         stage('terraform deploy') {
            agent {
                 docker {
-                    image 'hashicorp/terraform:1.4'
-                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace'
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        image 'hashicorp/terraform:1.4'
+                        args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY'
+                    }
+                    
                 }
             }
 
             stages {
                 stage('terraform init') {
                     steps{
-                        sh 'terraform init'
+                        sh 'terraform version'
                     }
                 }
 
-                stage('terraform plan') {
-                    steps{
-                        sh 'terraform plan'
-                    }
-                }
+                // stage('terraform plan') {
+                //     steps{
+                //         sh 'terraform plan'
+                //     }
+                // }
 
-                stage('terraform apply') {
-                    steps{
-                        sh 'terraform apply'
-                    }
-                }
+                // stage('terraform apply') {
+                //     steps{
+                //         sh 'terraform apply'
+                //     }
+                // }
             }
         }
 
