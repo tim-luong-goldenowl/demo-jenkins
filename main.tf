@@ -1,3 +1,3 @@
 output "jenkins_terraform" {
-  value = "running Terraform from Jenkin"
+  value = "running Terraform from Jenkiaan"
 }
