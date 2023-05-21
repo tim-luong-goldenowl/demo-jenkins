@@ -21,15 +21,16 @@ pipeline {
         // }
 
         stage('terraform check') {
-            agent {
-                docker {
-                    image 'hashicorp/terraform:1.4'
-                    args '-u 0:0 -v ${PWD}:/data -w /data'
-                }
-            }
+            // agent {
+            //     docker {
+            //         image 'hashicorp/terraform:1.4'
+            //         args '-u 0:0 -v ${PWD}:/data -w /data'
+            //     }
+            // }
+            agent any
 
             steps{
-                sh 'terraform apply --auto-approve'
+                sh 'docker run -it -v $(pwd):/workpace -w /workpace hashicorp/terraform:0.11.14 plan'
             }
         }
 
