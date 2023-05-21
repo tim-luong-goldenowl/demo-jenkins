@@ -21,16 +21,15 @@ pipeline {
         // }
 
         stage('terraform check') {
-            // agent {
-            //     docker {
-            //         image 'hashicorp/terraform:1.4'
-            //         args '-u 0:0 -v ${PWD}:/data -w /data'
-            //     }
-            // }
-            agent any
+           agent {
+                docker {
+                    image 'hashicorp/terraform:1.4'
+                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node:/workpace -w /workpace'
+                }
+            }
 
             steps{
-                sh 'docker run -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node:/workpace -w /workpace hashicorp/terraform:1.4 plan'
+                 sh 'terraform version'
             }
         }
 
