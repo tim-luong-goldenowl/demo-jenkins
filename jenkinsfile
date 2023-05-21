@@ -24,7 +24,7 @@ pipeline {
             agent {
                 docker {
                     image 'hashicorp/terraform:1.4'
-                    args '-v ${PWD}/terraform:/data -w /data'
+                    args '-u 0:0 -v ${PWD}/terraform:/data -w /data'
                 }
             }
 
