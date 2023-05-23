@@ -6,7 +6,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
-    
+
     stages {
         // stage('Unit Test') {
         //     agent {
@@ -15,7 +15,7 @@ pipeline {
         //             args '-u 0:0 -v /tmp:/root/.cache'
         //         }
         //     }
-    
+
         //     steps {
         //         sh 'npm install'
         //         sh 'npm test'
@@ -26,7 +26,7 @@ pipeline {
            agent {
                 docker {
                     image 'hashicorp/terraform:1.4'
-                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
+                    args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
                 }
             }
 
