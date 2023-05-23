@@ -33,6 +33,7 @@ pipeline {
             stages {
                 stage('terraform init') {
                     steps{
+                        sh 'cd /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/terraform/'
                         sh 'terraform plan'
                     }
                 }
