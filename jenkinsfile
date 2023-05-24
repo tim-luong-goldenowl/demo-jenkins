@@ -4,18 +4,10 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
     }
 
     stages {
-        stage('Initialize the variables') {
-            // Each stage is made up of steps
-            steps{
-                script{
-                    DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-                }
-            }
-        }
-
         stage('log') {
             agent any
 
