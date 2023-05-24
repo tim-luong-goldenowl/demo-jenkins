@@ -14,7 +14,6 @@ provider "aws" {
 resource "aws_security_group" "ec2_sg" {
   name        = "allow_http"
   description = "Allow http inbound traffic"
-  vpc_id      = data.aws_vpc.GetVPC.id
 
   ingress {
     from_port   = 443
