@@ -4,6 +4,7 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:master-14ed5f4"
     }
 
     stages {
@@ -41,10 +42,6 @@ pipeline {
         // }
 
         stage('Terraform Deploy') {
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:master-14ed5f4"
-            }
-
             agent {
                 docker {
                     image "hashicorp/terraform:1.4"
