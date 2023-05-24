@@ -41,7 +41,11 @@ pipeline {
         }
 
         stage('Terraform Deploy') {
-           agent {
+            environment {
+                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+            }
+
+            agent {
                 docker {
                     image 'hashicorp/terraform:1.4'
                     args  '--entrypoint="" -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e TF_VAR_IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
