@@ -4,11 +4,12 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:master-14ed5f4"
-        DOCKER_IMAGE_NAME_AND_TAG1 = "thailuong/sample-node:${env.GIT_BRANCH}"
     }
 
     stages {
+        environment {
+            DOCKER_IMAGE_NAME_AND_TAG1 = "thailuong/sample-node:${env.GIT_BRANCH}"
+        }
         // stage('Unit Test') {
         //     agent {
         //         docker {
@@ -61,7 +62,7 @@ pipeline {
                 stage('terraform apply') {
                     steps{
                         sh "echo ${env.GIT_BRANCH}"
-                        sh "echo ${GIT_BRANCH}"
+                        sh "echo ${DOCKER_IMAGE_NAME_AND_TAG1}"
                         sh "terraform apply -auto-approve"
                     }
                 }
