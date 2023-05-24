@@ -55,8 +55,8 @@ resource "aws_instance" "web" {
   user_data = <<EOF
     #!/bin/bash
 
-    sudo yum update
-    sudo yum install docker
+    sudo yum update -y
+    sudo yum install docker -y
     sudo usermod -a -G docker ec2-user
     newgrp docker
     sudo systemctl enable docker.service
