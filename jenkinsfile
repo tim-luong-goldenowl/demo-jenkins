@@ -43,11 +43,11 @@ pipeline {
                     }
                 }
 
-                // stage('terraform apply') {
-                //     steps{
-                //         sh 'terraform apply'
-                //     }
-                // }
+                stage('terraform apply') {
+                    steps{
+                        sh 'terraform apply'
+                    }
+                }
             }
         }
 

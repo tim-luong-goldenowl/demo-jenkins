@@ -14,7 +14,16 @@ provider "aws" {
 resource "aws_instance" "web" {
   ami           = "ami-0406b8387ac37a82a"
   instance_type = "t2.micro"
-  user_data = "${file("./scripts/install_docker.sh")}"
+  user_data = <<EOF
+    #!/bin/bash
+
+    sudo yum update
+    sudo yum install docker
+    sudo usermod -a -G docker ec2-user
+    newgrp docker
+    sudo systemctl enable docker.service
+    sudo systemctl start docker.service
+  EOF
 
   tags = {
     Name = "tim-first-instance"
