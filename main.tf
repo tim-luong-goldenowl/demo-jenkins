@@ -66,6 +66,8 @@ resource "aws_instance" "web" {
     newgrp docker
     sudo systemctl enable docker.service
     sudo systemctl start docker.service
+    sudo docker rm -f $(docker ps -a -q)
+    docker rmi $(docker images | grep 'thailuong/sample-node')
     sudo docker run -p 80:3000 -d ${var.IMAGE_NAME}
   EOF
 
