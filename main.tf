@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "ec2_sg" {
-  name        = "allow_http"
+  name        = "allow_http ${var.IMAGE_NAME}"
   description = "Allow http inbound traffic"
 
   ingress {
