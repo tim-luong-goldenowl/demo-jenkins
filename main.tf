@@ -67,7 +67,7 @@ resource "aws_instance" "web" {
     newgrp docker
     sudo systemctl enable docker.service
     sudo systemctl start docker.service
-    sudo docker run -p 443:3000 -d ${var.IMAGE_NAME}
+    sudo docker run -p 80:3000 -d ${var.IMAGE_NAME}
   EOF
 
   tags = {
