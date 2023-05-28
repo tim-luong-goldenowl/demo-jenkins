@@ -57,7 +57,7 @@ pipeline {
 
                 script {
                     def instance_dns = sh "terraform output instance_dns"
-                    env.instance_dns = instance_dns
+                    return instance_dns
                 }
             }
         }
@@ -67,7 +67,8 @@ pipeline {
 
             steps {
                 // slackSend message: "${env.instance_dns}"
-                sh "echo ${env.instance_dns}"
+
+                echo  "${Terraform Deploy}"
             }
         }
     }
