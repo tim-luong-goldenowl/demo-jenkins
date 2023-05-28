@@ -57,7 +57,8 @@ pipeline {
 
                 script {
                     def instance_dns = sh "terraform output instance_dns"
-                    slackSend message: "${instance_dns}"
+                    // slackSend message: "${instance_dns}"
+                    echo "@@${instance_dns}"
                 }
             }
         }
