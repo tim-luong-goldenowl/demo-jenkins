@@ -56,21 +56,18 @@ pipeline {
                 sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
 
                 script {
-                    def instance_dns = "hehehe"
-                    // slackSend message: "${instance_dns}"
-                    echo "@@${instance_dns}"
+                    def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
+                    env.instance_dns = instance_dns
                 }
             }
         }
 
-        // stage('Notify to Slack') {
-        //     agent any
+        stage('Notify to Slack') {
+            agent any
 
-        //     steps {
-        //         // slackSend message: "${env.instance_dns}"
-
-        //         echo  "${Terraform}"
-        //     }
-        // }
+            steps {
+                slackSend message: "${env.instance_dns}"
+            }
+        }
     }
 }
