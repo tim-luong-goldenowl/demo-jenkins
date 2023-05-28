@@ -78,7 +78,7 @@ variable "IMAGE_NAME" {
 #   }
 # }
 
-output "instance_url" {
+output "instance_dns" {
   # value = aws_instance.web.public_dns
   value = "SAMPLE DNS NAME"
 }
