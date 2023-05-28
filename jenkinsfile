@@ -57,19 +57,19 @@ pipeline {
 
                 script {
                     def instance_dns = sh "terraform output instance_dns"
-                    return instance_dns
+                    slackSend message: "${instance_dns}"
                 }
             }
         }
 
-        stage('Notify to Slack') {
-            agent any
+        // stage('Notify to Slack') {
+        //     agent any
 
-            steps {
-                // slackSend message: "${env.instance_dns}"
+        //     steps {
+        //         // slackSend message: "${env.instance_dns}"
 
-                echo  "${Terraform}"
-            }
-        }
+        //         echo  "${Terraform}"
+        //     }
+        // }
     }
 }
