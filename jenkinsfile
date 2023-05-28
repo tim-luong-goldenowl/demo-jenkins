@@ -39,7 +39,7 @@ pipeline {
         //     }
         // }
 
-        stage('Terraform Deploy') {
+        stage("Terraform") {
             agent {
                 docker {
                     image "hashicorp/terraform:1.4"
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 // slackSend message: "${env.instance_dns}"
 
-                echo  "${Terraform Deploy}"
+                echo  "${Terraform}"
             }
         }
     }
