@@ -21,23 +21,23 @@ pipeline {
         //     }
         // }
 
-        stage("Docker Build Iamge") {
-            agent any
+        // stage("Docker Build/Push Iamge") {
+        //     agent any
 
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-            }
+        //     environment {
+        //         DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+        //     }
 
-            steps {
-                sh "docker build -t ${DOCKER_IMAGE_NAME_AND_TAG} . "
-                withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
-                }
+        //     steps {
+        //         sh "docker build -t ${DOCKER_IMAGE_NAME_AND_TAG} . "
+        //         withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //             sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
+        //         }
 
-                //clean to save disk
-                sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
-            }
-        }
+        //         //clean to save disk
+        //         sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
+        //     }
+        // }
 
         stage('Terraform Deploy') {
             agent {
@@ -62,7 +62,20 @@ pipeline {
                     steps{
                         sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
                     }
+
+                    script {
+                        def instance_dns = sh "terraform output instance_name"
+                        env.instance_dns = instance_dns
+                    }
                 }
+            }
+        }
+
+        stage('Notify to Slack') {
+            agent any
+
+            steps {
+                slackSend message: "${env.instance_dns}"
             }
         }
     }
