@@ -61,11 +61,11 @@ pipeline {
                 stage('terraform apply') {
                     steps{
                         sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
-                    }
 
-                    script {
-                        def instance_dns = sh "terraform output instance_name"
-                        env.instance_dns = instance_dns
+                        script {
+                            def instance_dns = sh "terraform output instance_name"
+                            env.instance_dns = instance_dns
+                        }
                     }
                 }
             }
