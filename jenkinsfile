@@ -6,7 +6,7 @@ pipeline {
             agent any
 
             steps {
-                sh "echo 'hello'"
+                sh "echo 'hello213213123'"
             }
         }
 
@@ -14,7 +14,7 @@ pipeline {
             agent any
 
             steps {
-                sh "echo 'hello2'"
+                sh "echo 'hello3332'"
             }
         }
     }
