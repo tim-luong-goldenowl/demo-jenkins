@@ -1,25 +1,20 @@
 pipeline {
     agent none
 
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-    }
-
     stages {
-        // stage('Unit Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:lts-bullseye-slim'
-        //             args '-u 0:0 -v /tmp:/root/.cache'
-        //         }
-        //     }
+        stage('Unit Test') {
+            agent {
+                docker {
+                    image 'node:lts-bullseye-slim'
+                    args '-u 0:0 -v /tmp:/root/.cache'
+                }
+            }
 
-        //     steps {
-        //         sh 'npm install'
-        //         sh 'npm test'
-        //     }
-        // }
+            steps {
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
 
         stage("Docker Build/Push Iamge") {
             agent any
@@ -36,37 +31,6 @@ pipeline {
 
                 //clean to save disk
                 sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
-            }
-        }
-
-        stage("Terraform Deploy") {
-            agent {
-                docker {
-                    image "hashicorp/terraform:1.4"
-                    args  "--entrypoint='' -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
-                }
-            }
-
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-            }
-
-            steps {
-                sh 'terraform init'
-                sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
-
-                script {
-                    def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
-                    env.instance_dns = instance_dns
-                }
-            }
-        }
-
-        stage('Notify to Slack') {
-            agent any
-
-            steps {
-                slackSend message: "Your ${BRANCH_NAME} has been deploy to ${env.instance_dns}"
             }
         }
     }
