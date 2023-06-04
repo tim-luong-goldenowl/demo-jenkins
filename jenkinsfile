@@ -19,11 +19,11 @@ pipeline {
         }
 
         
-        stage("Docker Build/Push Iamge") {
+        stage("Docker Build/Push Iamge123213") {
             agent any
 
             steps {
-                sh "echo '@@@@@@@@@@@@hello3332'"
+                sh "echo 'lalalalhello3332'"
             }
         }
     }
