@@ -1,6 +1,5 @@
 variable "IMAGE_NAME" {
   type = string
-  default = "asdad"
 }
 
 terraform {
@@ -17,7 +16,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "ec2_sg" {
-  name        = "allow_http-${var.IMAGE_NAME}"
+  name        = "SG_for_${var.IMAGE_NAME}"
   description = "Allow http inbound traffic"
 
   ingress {
@@ -70,8 +69,15 @@ resource "aws_instance" "web" {
     sudo docker run -p 80:3000 -d ${var.IMAGE_NAME}
   EOF
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags = {
     Name = "${var.IMAGE_NAME}"
   }
 }
 
+output "instance_dns" {
+  value = aws_instance.web.public_dns
+}
