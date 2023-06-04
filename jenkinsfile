@@ -17,5 +17,14 @@ pipeline {
                 sh "echo 'hello3332'"
             }
         }
+
+        
+        stage("Docker Build/Push Iamge") {
+            agent any
+
+            steps {
+                sh "echo '@@@@@@@@@@@@hello3332'"
+            }
+        }
     }
 }
