@@ -30,13 +30,14 @@ pipeline {
             agent {
                 docker {
                     image "hashicorp/terraform:1.4"
-                    args  "--entrypoint='' -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_aws_providers/:/workpace/.terraform -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+                    args  "--entrypoint='' -v /var/jenkins_home/workspace/terraform_cache/:/workpace/.terraform -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
                 }
             }
 
             steps {
                 sh "echo 'llllllllllllll'"
                 sh 'pwd'
+                sh 'ls -a'
                 sh 'terraform init'
                 sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
 
