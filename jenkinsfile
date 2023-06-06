@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage("Docker Build Iamge") {
+        stage("Docker Build Iamgee") {
             agent any
 
             environment {
