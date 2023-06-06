@@ -2,18 +2,18 @@ variable "IMAGE_NAME" {
   type = string
 }
 
-# terraform {
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 4.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
 
-# provider "aws" {
-#   region = "ap-southeast-1"
-# }
+provider "aws" {
+  region = "ap-southeast-1"
+}
 
 # resource "aws_security_group" "ec2_sg" {
 #   name        = "SG_for_${var.IMAGE_NAME}"
