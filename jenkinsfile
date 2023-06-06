@@ -7,67 +7,62 @@ pipeline {
     }
 
     stages {
-        // stage('Unit Test') {
+        stage("try stage") {
+            steps {
+                script {
+                    def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+                    env.image_name = image_name
+                }
+
+                sh "echo 'This is a try stage'"
+            }
+        }
+        // stage("Docker Build/Push Iamge") {
+        //     agent any
+
+        //     steps {
+        //         script {
+        //             def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+        //             env.image_name = image_name
+        //         }
+
+        //         sh "docker build -t ${env.image_name} . "
+        //         withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //             sh "docker push ${env.image_name}"
+        //         }
+
+        //         //clean to save disk
+        //         sh "docker image rm ${env.image_name}"
+        //     }
+        // }
+
+        // stage("Terraform Deploy") {
         //     agent {
         //         docker {
-        //             image 'node:lts-bullseye-slim'
-        //             args '-u 0:0 -v /tmp:/root/.cache'
+        //             image "hashicorp/terraform:1.4"
+        //             args  "--entrypoint='' -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
         //         }
         //     }
 
         //     steps {
-        //         sh 'npm install'
-        //         sh 'npm test'
+        //         sh 'terraform init'
+        //         sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
+
+        //         script {
+        //             def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
+        //             env.instance_dns = instance_dns
+        //         }
         //     }
         // }
+    }
 
-        stage("Docker Build/Push Iamge") {
-            agent any
-
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-            }
-
-            steps {
-                sh "docker build -t ${DOCKER_IMAGE_NAME_AND_TAG} . "
-                withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
-                }
-
-                //clean to save disk
-                sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
-            }
+    post {
+        success {
+            slackSend message: "Your ${BRANCH_NAME} has been successfully deploy to ${env.image_name}!"
         }
 
-        stage("Terraform Deploy") {
-            agent {
-                docker {
-                    image "hashicorp/terraform:1.4"
-                    args  "--entrypoint='' -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
-                }
-            }
-
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-            }
-
-            steps {
-                sh 'terraform init'
-                sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
-
-                script {
-                    def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
-                    env.instance_dns = instance_dns
-                }
-            }
-        }
-
-        stage('Notify to Slack') {
-            agent any
-
-            steps {
-                slackSend message: "Your ${BRANCH_NAME} has been deploy to ${env.instance_dns}"
-            }
+        failure {
+            slackSend message: "Your ${BRANCH_NAME} deployment has failed! ${env.image_name}"
         }
     }
 }
