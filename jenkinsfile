@@ -35,7 +35,6 @@ pipeline {
             }
 
             steps {
-                sh "asd"
                 sh 'pwd'
                 sh 'ls -a'
                 sh 'terraform init'
