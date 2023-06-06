@@ -36,6 +36,7 @@ pipeline {
 
             steps {
                 sh 'cp -r /var/jenkins_home/workspace/.terraform/ .terraform'
+                sh 'cp /var/jenkins_home/workspace/.terraform.lock.hcl .terraform.lock.hcl'
                 sh 'terraform init'
                 sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
 
