@@ -35,7 +35,7 @@ pipeline {
             }
 
             steps {
-                sh 'pwd'
+                sh 'cp -r /Users/goldenowl/Documents/jenkins/data/workspace/.terraform/ .terraform'
                 sh 'ls -a'
                 sh 'terraform init'
                 sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
