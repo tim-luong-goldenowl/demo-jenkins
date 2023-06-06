@@ -10,7 +10,7 @@ pipeline {
         stage("try stage") {
             steps {
                 script {
-                    def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+                    def image_name = "thailuong/sample-node:${BRANCH_NAME.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
                     env.image_name = image_name
                 }
 
