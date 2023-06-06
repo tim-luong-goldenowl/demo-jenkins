@@ -14,7 +14,7 @@ pipeline {
                     env.image_name = image_name
                 }
 
-                sh "echo 'This is a try stage'"
+                sh "echo 'This isS a try stage'"
             }
         }
         // stage("Docker Build/Push Iamge") {
