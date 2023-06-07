@@ -32,8 +32,8 @@ pipeline {
                     image "hashicorp/terraform:1.4"
                     args  """
                         --entrypoint='' \
-                        -v /Users/goldenowl/Documents/jenkins/data/workspace/.terraform/:/var/jenkins_home/workspace/multiple_branch_PR-14/.terraform \
-                        -v /Users/goldenowl/Documents/jenkins/data/workspace/.terraform.lock.hcl:/var/jenkins_home/workspace/multiple_branch_PR-14/.terraform.lock.hcl \
+                        -v /Users/goldenowl/Documents/jenkins/data/workspace/.terraform/:${pwd}/.terraform \
+                        -v /Users/goldenowl/Documents/jenkins/data/workspace/.terraform.lock.hcl:${pwd}/.terraform.lock.hcl \
                         -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
                     """
                 }
