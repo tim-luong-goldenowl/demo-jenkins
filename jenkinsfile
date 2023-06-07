@@ -42,12 +42,12 @@ pipeline {
 
             steps {
                 sh 'terraform init'
-                sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
+                // sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
 
-                script {
-                    def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
-                    env.instance_dns = instance_dns
-                }
+                // script {
+                //     def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
+                //     env.instance_dns = instance_dns
+                // }
             }
         }
     }
