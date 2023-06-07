@@ -19,25 +19,20 @@ pipeline {
                 }
             }
         }
-        // stage("Docker Build/Push Iamge") {
-        //     agent any
+        
+        stage("Docker Build/Push Iamge") {
+            agent any
 
-        //     steps {
-        //         sh "echo '${WORKSPACE}'"
-        //         script {
-        //             def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-        //             env.image_name = image_name
-        //         }
+            steps {
+                sh "docker build -t ${env.image_name} . "
+                withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker push ${env.image_name}"
+                }
 
-        //         sh "docker build -t ${env.image_name} . "
-        //         withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        //             sh "docker push ${env.image_name}"
-        //         }
-
-        //         //clean to save disk
-        //         sh "docker image rm ${env.image_name}"
-        //     }
-        // }
+                //clean to save disk
+                sh "docker image rm ${env.image_name}"
+            }
+        }
 
         stage("Terraform Deploy") {
             agent {
