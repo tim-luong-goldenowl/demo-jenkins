@@ -62,4 +62,14 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            slackSend message: "Your ${BRANCH_NAME} has been successfully deployed to ${env.instance_dns}!"
+        }
+
+        failure {
+            slackSend message: "Your ${BRANCH_NAME} deployment has failed!"
+        }
+    }
 }
