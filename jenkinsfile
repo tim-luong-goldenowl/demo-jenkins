@@ -28,7 +28,7 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-                    sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
+                    sh "docker push ${env.image_name}"
                 }
 
                 sh "docker logout"
