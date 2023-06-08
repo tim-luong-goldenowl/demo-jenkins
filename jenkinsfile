@@ -3,27 +3,34 @@ pipeline {
 
     stages {
         stage('Unit Test') {
-            agent any
+            agent {
+                docker {
+                    image 'node:lts-bullseye-slim'
+                    args '-u 0:0 -v /tmp:/root/.cache'
+                }
+            }
 
             steps {
-                sh "echo 'hello213213123'"
+                sh 'npm install'
+                sh 'npm test'
             }
         }
 
         stage("Docker Build/Push Iamge") {
             agent any
 
-            steps {
-                sh "echo 'hello3332we'"
+            environment {
+                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
             }
-        }
-
-        
-        stage("Docker Build/Push Iamge123213") {
-            agent any
 
             steps {
-                sh "echo 'lalalalhello3332'"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_AND_TAG} . "
+                withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
+                }
+
+                //clean to save disk
+                sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
             }
         }
     }
