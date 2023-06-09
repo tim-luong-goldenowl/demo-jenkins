@@ -42,7 +42,7 @@ pipeline {
             agent any
 
             steps {
-                sh "echo 'echo from try stage'"
+                sh "echoooo 'echo from try stageee'"
             }
         }
     }
