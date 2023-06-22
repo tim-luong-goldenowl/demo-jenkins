@@ -7,35 +7,34 @@ pipeline {
     }
 
     stages {
-        // stage('Unit Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:lts-bullseye-slim'
-        //             args '-u 0:0 -v /tmp:/root/.cache'
-        //         }
-        //     }
-
-        //     steps {
-        //         sh 'npm install'
-        //         sh 'npm test'
-        //     }
-        // }
-
-        stage("Docker Build/Push Iamge") {
+        stage("Prepare env vars") {
             agent any
 
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+            steps {
+                script {
+                    def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
+                    env.image_name = image_name
+                    def current_pwd = "${WORKSPACE}"
+                    env.current_pwd = current_pwd
+                }
             }
+        }
+
+        stage("Docker Build/Push Image") {
+            agent any
 
             steps {
-                sh "docker build -t ${DOCKER_IMAGE_NAME_AND_TAG} . "
+                sh "docker build -t ${env.image_name} . "
+
                 withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker push ${DOCKER_IMAGE_NAME_AND_TAG}"
+                    sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
+                    sh "docker push ${env.image_name}"
                 }
 
+                sh "docker logout"
+
                 //clean to save disk
-                sh "docker image rm ${DOCKER_IMAGE_NAME_AND_TAG}"
+                sh "docker image rm ${env.image_name}"
             }
         }
 
@@ -43,17 +42,19 @@ pipeline {
             agent {
                 docker {
                     image "hashicorp/terraform:1.4"
-                    args  "--entrypoint='' -v /Users/goldenowl/Documents/jenkins/data/workspace/sample_node/:/workpace -w /workpace -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+                    // volumns below for caching terraform provider libs
+                    args  """
+                        --entrypoint='' \
+                        -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_cache/.terraform/:${env.current_pwd}/.terraform \
+                        -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_cache/.terraform.lock.hcl:${env.current_pwd}/.terraform.lock.hcl \
+                        -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                    """
                 }
-            }
-
-            environment {
-                DOCKER_IMAGE_NAME_AND_TAG = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
             }
 
             steps {
                 sh 'terraform init'
-                sh "terraform apply -var='IMAGE_NAME=${DOCKER_IMAGE_NAME_AND_TAG}' -auto-approve"
+                sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
 
                 script {
                     def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
@@ -61,13 +62,15 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Notify to Slack') {
-            agent any
+    post {
+        success {
+            slackSend message: "Your ${BRANCH_NAME} has been successfully deploy to ${env.instance_dns}!"
+        }
 
-            steps {
-                slackSend message: "Your ${BRANCH_NAME} has been deploy to ${env.instance_dns}"
-            }
+        failure {
+            slackSend message: "Your ${BRANCH_NAME} deployment has failed!"
         }
     }
 }
