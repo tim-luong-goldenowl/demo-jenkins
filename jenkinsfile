@@ -19,7 +19,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Docker Build/Push Image") {
             agent any
 
@@ -42,6 +42,7 @@ pipeline {
             agent {
                 docker {
                     image "hashicorp/terraform:1.4"
+                    // volumns below for caching terraform provider libs
                     args  """
                         --entrypoint='' \
                         -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_cache/.terraform/:${env.current_pwd}/.terraform \
@@ -60,6 +61,16 @@ pipeline {
                     env.instance_dns = instance_dns
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            slackSend message: "Your ${BRANCH_NAME} has been successfully deploy to ${env.instance_dns}!"
+        }
+
+        failure {
+            slackSend message: "Your ${BRANCH_NAME} deployment has failed!"
         }
     }
 }
