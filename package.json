@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/tim-luong-goldenowl/demo-jenkins#readme",
   "dependencies": {
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "pg": "^8.11.0"
   }
 }
