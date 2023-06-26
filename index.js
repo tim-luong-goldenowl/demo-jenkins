@@ -11,15 +11,6 @@ app.use(
 )
 app.set('view engine', 'ejs')
 
-
-app.get('/', (req, res) => {
-<<<<<<< Updated upstream
-  res.send('Hello Worldddd master ok!')
-=======
-  res.render('index')
->>>>>>> Stashed changes
-})
-
 app.get('/home', (req, res) => {
   console.log('Someone is accessing the home page')
   res.render('home')
