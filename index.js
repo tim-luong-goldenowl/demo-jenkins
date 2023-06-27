@@ -26,7 +26,10 @@ app.get('/users/new', (req, res) => {
   res.render('userNew')
 })
 
-app.get('/users', db.getUsers)
+app.get('/users', async (request, response) => {
+  const users = await db.getUsers();
+  response.render("userList", {userList:users});
+})
 
 app.post('/users/new', db.createUser)
 

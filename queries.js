@@ -9,13 +9,9 @@ const pool = new Pool({
   port: 5432,
 })
 
-const getUsers = (request, response) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.render("userList", {userList:results.rows});
-  })
+const getUsers = async (request, response) => {
+  const results = await pool.query('SELECT * FROM users ORDER BY id ASC')
+  return results.rows
 }
 
 const createUser = (request, response) => {
