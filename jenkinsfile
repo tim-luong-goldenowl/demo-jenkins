@@ -1,76 +1,16 @@
 pipeline {
-    agent none
+  agent {
+    label 'linux-slave-01'
+  }
 
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+  stages {
+    stage('try check') {
+      steps {
+        publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
+          text: 'you can publish checks in pipeline script',
+          detailsURL: 'https://github.com/jenkinsci/checks-api-plugin#pipeline-usage',
+          actions: [[label:'an-user-request-action', description:'actions allow users to request pre-defined behaviours', identifier:'an unique identifier']]
+      }
     }
-
-    stages {
-        stage("Prepare env vars") {
-            agent any
-
-            steps {
-                script {
-                    def image_name = "thailuong/sample-node:${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
-                    env.image_name = image_name
-                    def current_pwd = "${WORKSPACE}"
-                    env.current_pwd = current_pwd
-                }
-            }
-        }
-
-        stage("Docker Build/Push Image") {
-            agent any
-
-            steps {
-                sh "docker build -t ${env.image_name} . "
-
-                withCredentials([usernamePassword(credentialsId: 'docker hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-                    sh "docker push ${env.image_name}"
-                }
-
-                sh "docker logout"
-
-                //clean to save disk
-                sh "docker image rm ${env.image_name}"
-            }
-        }
-
-        stage("Terraform Deploy") {
-            agent {
-                docker {
-                    image "hashicorp/terraform:1.4"
-                    // volumns below for caching terraform provider libs
-                    args  """
-                        --entrypoint='' \
-                        -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_cache/.terraform/:${env.current_pwd}/.terraform \
-                        -v /Users/goldenowl/Documents/jenkins/data/workspace/terraform_cache/.terraform.lock.hcl:${env.current_pwd}/.terraform.lock.hcl \
-                        -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-                    """
-                }
-            }
-
-            steps {
-                sh 'terraform init'
-                sh "terraform apply -var='IMAGE_NAME=${env.image_name}' -auto-approve"
-
-                script {
-                    def instance_dns = sh(returnStdout: true, script: "terraform output instance_dns")
-                    env.instance_dns = instance_dns
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            slackSend message: "Your ${BRANCH_NAME} has been successfully deploy to ${env.instance_dns}!"
-        }
-
-        failure {
-            slackSend message: "Your ${BRANCH_NAME} deployment has failed!"
-        }
-    }
+  }
 }
