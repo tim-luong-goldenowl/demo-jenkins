@@ -7,8 +7,9 @@ pipeline {
     stage('try check') {
       steps {
         echo('hahaae')
-        publishChecks name: 'example'
-        publishChecks name: 'example 2', detailsURL: "${env.RUN_DISPLAY_URL}"
+        publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
+                      text: 'you can publish checks in pipeline script',
+                      detailsURL: 'https://github.com/jenkinsci/checks-api-plugin#pipeline-usage'
       }
     }
   }
