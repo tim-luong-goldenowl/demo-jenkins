@@ -8,6 +8,7 @@ pipeline {
       steps {
         echo('hahaae')
         publishChecks name: 'example'
+        publishChecks name: 'example 2', detailsURL: "${env.RUN_DISPLAY_URL}"
       }
     }
   }
