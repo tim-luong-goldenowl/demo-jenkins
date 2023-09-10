@@ -6,10 +6,13 @@ pipeline {
   stages {
     stage('try check') {
       steps {
-        echo('hahaae')
-        publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
-                      text: 'you can publish checks in pipeline script',
-                      detailsURL: "${env.RUN_DISPLAY_URL}"
+        script {
+          def version = readFile "${env.WORKSPACE}/demo.log"
+          echo('hahaae')
+          publishChecks name: 'example', title: 'Pipeline Check', summary: 'check through pipeline',
+                        text: "${version}",
+                        detailsURL: "${env.RUN_DISPLAY_URL}"
+        }
       }
     }
   }
