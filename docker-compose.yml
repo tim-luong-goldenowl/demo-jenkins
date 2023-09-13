@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   web:
-    image: thailuong/web-server:beautiful
+    image: thailuong/web-server:latest
     ports:
       - '5551:3000'
     environment:
