@@ -1,8 +1,9 @@
 version: '3.8'
 services:
-  web-2:
+  web:
     build:
       context: .
+      image: test-stack-1
     ports:
       - '5551:3000'
     environment:
