@@ -4,7 +4,7 @@ const app = express()
 const port = 3000
 const db = require('./queries')
 
-app.get('/api/users', async (req, res) => {
+app.get('/users', async (req, res) => {
   const users = await db.getUsers();
   res.json(users);
 })

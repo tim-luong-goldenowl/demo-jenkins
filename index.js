@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
-const db = require('./queries')
+
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
@@ -12,7 +12,7 @@ app.use(
 )
 app.set('view engine', 'ejs')
 
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
   console.log('Someone is accessing the home page')
   res.render('home')
 })
@@ -25,13 +25,6 @@ app.get('/about', (req, res) => {
 app.get('/users/new', (req, res) => {
   res.render('userNew')
 })
-
-app.get('/users', async (request, response) => {
-  const users = await db.getUsers();
-  response.render("userList", {userList:users});
-})
-
-app.post('/users/new', db.createUser)
 
 
 app.listen(port, () => {
