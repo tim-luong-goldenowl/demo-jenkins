@@ -13,7 +13,7 @@ app.use(
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-  console.log('Someone is accessing the home page')
+  console.log('Someone is accessing the home pageeee')
   res.render('home')
 })
 
