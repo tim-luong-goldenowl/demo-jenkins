@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   web:
-    image: thailuong/web-server:latest
+    build:
+      context: .
+    image: test-stack-1
     ports:
       - '5551:3000'
     environment:
