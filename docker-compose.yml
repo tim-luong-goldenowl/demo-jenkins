@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   web:
-    build:
-      context: .
+
     ports:
-      - '5554:3000'
+      - '5551:3000'
