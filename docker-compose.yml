@@ -3,8 +3,7 @@ services:
   web:
     build:
       context: .
-    image: test-stack-2
     ports:
-      - '5551:3000'
+      - '5553:3000'
     environment:
       - test=${test}
