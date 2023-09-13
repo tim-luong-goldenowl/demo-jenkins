@@ -1,9 +1,7 @@
 version: '3.8'
 services:
   web:
-    build:
-      context: .
-      image: test-stack-1
+    image: thailuong/web-server:beautiful
     ports:
       - '5551:3000'
     environment:
