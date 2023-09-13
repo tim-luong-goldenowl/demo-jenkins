@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: .
-    image: test-stack-1
+    image: test-stack-2
     ports:
       - '5551:3000'
     environment:
